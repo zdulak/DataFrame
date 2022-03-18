@@ -1,6 +1,6 @@
 package mydataframe
 
-import mydataframe.DataFrameUtilities.ListExtensions
+import mydataframe.DataFrameUtilities.SeqExtensions
 
 object TestMain {
   def main(args: Array[String]): Unit = {

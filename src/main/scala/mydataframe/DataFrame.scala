@@ -1,7 +1,7 @@
 package mydataframe
 
-case class DataFrame(rows: List[List[Any]], columnsNames: List[String]) {
-  private val _frame = columnsNames :: rows
+case class DataFrame(rows: Seq[Seq[Any]], columnsNames: Seq[String]) {
+  private val _frame = columnsNames +: rows
 
   def show(): Unit = {
     val columnsSizes = _frame.transpose.map(col => col.map(_.toString.length).max)
@@ -13,7 +13,7 @@ case class DataFrame(rows: List[List[Any]], columnsNames: List[String]) {
     println(borderString)
   }
 
-  private def rowToString(row: List[Any], columnsSizes: List[Int]): String = {
+  private def rowToString(row: Seq[Any], columnsSizes: Seq[Int]): String = {
     row.zip(columnsSizes).map { case (elem, cs) => s"%1$$${cs}s".format(elem) }.mkString("|", "|", "|")
   }
 }

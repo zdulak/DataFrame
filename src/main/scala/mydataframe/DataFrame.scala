@@ -21,6 +21,11 @@ case class DataFrame(rows: Seq[Seq[Any]], columnsNames: Seq[String]) {
     DataFrame(newRows, newColumns)
   }
 
+  def select(selectNames: String*): DataFrame = {
+    val newRows = _frame.transpose.filter(col => selectNames.contains(col.head)).transpose.tail
+    DataFrame(newRows, selectNames)
+  }
+
   private def rowToString(row: Seq[Any], columnsSizes: Seq[Int]): String =
     row.zip(columnsSizes).map { case (elem, cs) => s"%1$$${cs}s".format(elem) }.mkString("|", "|", "|")
 

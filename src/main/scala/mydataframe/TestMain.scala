@@ -6,8 +6,6 @@ object TestMain {
   def main(args: Array[String]): Unit = {
     val frame = DataFrame(List(List("Michael", 1), List("Andy", 30), List("Justin", 19)), List("name", "age"))
     frame.show()
-//    val frame2 = List(List("Anna", 1), List("Monika", 30), List("Julia", 19)).toDF(List("name", "age"): _*)
-//    frame2.show()
 
     val emp = Seq(Seq(1,"Smith",-1,"2018","10","M",3000),
                   Seq(2,"Rose",1,"2010","20","M",4000),
@@ -30,7 +28,9 @@ object TestMain {
     val deptDF = dept.toDF(deptColumns:_*)
     deptDF.show()
 
-    empDF.join(deptDF,Seq("dept_id")).show()
+    val empDFJoinDeptDF = empDF.join(deptDF,Seq("dept_id"))
+    empDFJoinDeptDF.show()
+    empDFJoinDeptDF.select("emp_id","name","superior_emp_id","year_joined", "dept_name").show()
 
   }
 

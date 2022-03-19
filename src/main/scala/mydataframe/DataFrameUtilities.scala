@@ -5,4 +5,7 @@ object DataFrameUtilities {
     def toDF(columnsNames: String*): DataFrame = DataFrame(rows, columnsNames)
   }
 
+  implicit class ProductExtensions(val rows: Seq[Product]) {
+    def toDF(columnsNames: String*): DataFrame = DataFrame(rows.map(_.productIterator.toSeq), columnsNames)
+  }
 }

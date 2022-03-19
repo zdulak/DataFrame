@@ -13,7 +13,25 @@ case class DataFrame(rows: Seq[Seq[Any]], columnsNames: Seq[String]) {
     println(borderString)
   }
 
-  private def rowToString(row: Seq[Any], columnsSizes: Seq[Int]): String = {
-    row.zip(columnsSizes).map { case (elem, cs) => s"%1$$${cs}s".format(elem) }.mkString("|", "|", "|")
+  def join(dataFrame: DataFrame, joinColumns: Seq[String]): DataFrame = {
+    val columnsIndices = joinColumns
+      .map(colName => (columnsNames.indexOf(colName), dataFrame.columnsNames.indexOf(colName)))
+    val newRows = rows.flatMap(joinWithMatchingRow(_, dataFrame, columnsIndices))
+    val newColumns = columnsNames :++ dataFrame.columnsNames
+    DataFrame(newRows, newColumns)
   }
+
+  private def rowToString(row: Seq[Any], columnsSizes: Seq[Int]): String =
+    row.zip(columnsSizes).map { case (elem, cs) => s"%1$$${cs}s".format(elem) }.mkString("|", "|", "|")
+
+  private def joinWithMatchingRow(row: Seq[Any], dataFrame: DataFrame, indices: Seq[(Int, Int)]): Seq[Seq[Any]] =
+    dataFrame.rows
+             .filter(dfRow => joinEquals(row, dfRow, indices))
+             .map(dfRow => row :++ dfRow)
+
+  private def joinEquals(thisRow: Seq[Any], otherRow: Seq[Any], indices: Seq[(Int, Int)]): Boolean =
+    // toString is needed because we are comparing objects of type Any
+    indices.forall { case (i, j) => thisRow(i).toString == otherRow(j).toString }
+
+
 }

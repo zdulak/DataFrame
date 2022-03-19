@@ -30,7 +30,7 @@ object TestMain {
 
     val empDFJoinDeptDF = empDF.join(deptDF,Seq("dept_id"))
     empDFJoinDeptDF.show()
-    empDFJoinDeptDF.select("emp_id","name","superior_emp_id","year_joined", "dept_name").show()
+    empDFJoinDeptDF.select("emp_id","name","year_joined", "dept_id", "dept_name").show()
 
   }
 

@@ -17,7 +17,7 @@ case class DataFrame(rows: Seq[Seq[Any]], columnsNames: Seq[String]) {
     val columnsIndices = joinColumns
       .map(colName => (columnsNames.indexOf(colName), dataFrame.columnsNames.indexOf(colName)))
     val newRows = rows.flatMap(joinWithMatchingRow(_, dataFrame, columnsIndices))
-    val newColumns = columnsNames :++ dataFrame.columnsNames
+    val newColumns = columnsNames :++ dataFrame.columnsNames.filter(!columnsNames.contains(_))
     DataFrame(newRows, newColumns)
   }
 
@@ -32,11 +32,14 @@ case class DataFrame(rows: Seq[Seq[Any]], columnsNames: Seq[String]) {
   private def joinWithMatchingRow(row: Seq[Any], dataFrame: DataFrame, indices: Seq[(Int, Int)]): Seq[Seq[Any]] =
     dataFrame.rows
              .filter(dfRow => joinEquals(row, dfRow, indices))
-             .map(dfRow => row :++ dfRow)
+             .map(dfRow => row :++ getRowWithoutIndices(dfRow, indices.map(_._2)))
 
   private def joinEquals(thisRow: Seq[Any], otherRow: Seq[Any], indices: Seq[(Int, Int)]): Boolean =
     // toString is needed because we are comparing objects of type Any
     indices.forall { case (i, j) => thisRow(i).toString == otherRow(j).toString }
+
+  private def getRowWithoutIndices(row: Seq[Any], indices: Seq[Int]): Seq[Any] =
+    row.indices.filter(!indices.contains(_)).map(row(_))
 
 
 }
